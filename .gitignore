@@ -1,0 +1,19 @@
+# Carpetas de compilación de .NET
+bin/
+obj/
+
+# Archivos de usuario de Visual Studio / Rider
+*.user
+*.suo
+
+# Configuración local de VSCode (dejamos launch.json/settings compartidos si se desea)
+.vs/
+
+# Salidas generadas por Graphviz (se pueden regenerar)
+*.dot
+*.png
+*.svg
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
