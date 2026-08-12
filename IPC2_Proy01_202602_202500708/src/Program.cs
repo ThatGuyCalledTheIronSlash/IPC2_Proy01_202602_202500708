@@ -5,11 +5,6 @@ class Program
 
     static void Main()
     {
-
-        ProbarTDA();   // <-- borra o comenta esta línea después de verificar
-        Console.WriteLine();
-
-
         bool salir = false;
         while (!salir)
         {
@@ -71,39 +66,5 @@ class Program
         }
 
 //----------------------------------
-static void ProbarTDA()
-{
-    Console.WriteLine("=== PRUEBA: ListaSimple<int> ===");
-    ListaSimple<int> lista = new ListaSimple<int>();
-    lista.Insertar(10);
-    lista.Insertar(20);
-    lista.Insertar(30);
-    Console.WriteLine($"Cantidad esperada: 3 | Cantidad real: {lista.Cantidad}");
-    for (int i = 0; i < lista.Cantidad; i++)
-        Console.Write($"{lista.ObtenerEn(i)} ");
-    Console.WriteLine("\n(Esperado: 10 20 30)\n");
-
-    Console.WriteLine("=== PRUEBA: Pila<int> ===");
-    Pila<int> pila = new Pila<int>();
-    pila.Apilar(1);
-    pila.Apilar(2);
-    pila.Apilar(3);
-    Console.WriteLine($"Cantidad esperada: 3 | Cantidad real: {pila.Cantidad}");
-    Console.WriteLine("Desapilando (esperado: 3 2 1, orden LIFO):");
-    while (!pila.EstaVacia)
-        Console.Write($"{pila.Desapilar()} ");
-    Console.WriteLine($"\n¿Vacía ahora? {pila.EstaVacia} (esperado: True)\n");
-
-    Console.WriteLine("=== PRUEBA: Cola<int> ===");
-    Cola<int> cola = new Cola<int>();
-    cola.Encolar(100);
-    cola.Encolar(200);
-    cola.Encolar(300);
-    Console.WriteLine("Desencolando (esperado: 100 200 300, orden FIFO):");
-    while (!cola.EstaVacia)
-        Console.Write($"{cola.Desencolar()} ");
-    Console.WriteLine($"\n¿Vacía ahora? {cola.EstaVacia} (esperado: True)");
-}
-
 
 }
