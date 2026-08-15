@@ -37,13 +37,15 @@ public class ReporteRuta
 
     try{
 
-        // dot -Tpng ruta.dot -o ruta.png
-        Process.Start("dot", "-Tpng " + archivo + " -o " + archivo + ".png");
+        var proceso = Process.Start("dot", "-Tpng " + archivo + " -o " + archivo + ".png");
+        proceso.WaitForExit();
         Console.WriteLine("Imagen PNG generada correctamente.");
     }
-        catch (Exception ex)
+        catch (Exception)
         {
-        Console.WriteLine("Error al generar la imagen PNG: " + ex.Message);
+            Console.WriteLine("Graphviz no está instalado o no se encontró 'dot' en el PATH.");
+            Console.WriteLine($"El archivo {archivo} sí se generó — puedes compilarlo manualmente después.");
+                
         }
     }
 }
