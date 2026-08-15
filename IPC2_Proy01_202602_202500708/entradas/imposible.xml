@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<configuracion>
+  <listaCiudades>
+    <ciudad>
+      <nombre filas="5" columnas="5">CiudadImposible</nombre>
+      <fila numero="1">"*****"</fila>
+      <fila numero="2">"*E***"</fila>
+      <fila numero="3">"*****"</fila>
+      <fila numero="4">"** C*"</fila>
+      <fila numero="5">"*****"</fila>
+    </ciudad>
+  </listaCiudades>
+  <robots>
+    <robot>
+      <nombre tipo="ChapinRescue">robotRescate</nombre>
+    </robot>
+  </robots>
+</configuracion>
