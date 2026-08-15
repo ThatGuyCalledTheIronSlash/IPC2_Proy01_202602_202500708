@@ -14,11 +14,11 @@ public class LectorConfiguracion
         XmlDocument doc = new XmlDocument();
         doc.Load(ruta);
 
-        foreach (XmlNode nodoCiudad in doc.SelectNodes("//ciudad"))
+        foreach (XmlNode nodoCiudad in doc.SelectNodes("//ciudad")!)
         {
             XmlNode nombre = nodoCiudad.SelectSingleNode("nombre");
             string nom = nombre.InnerText.Trim();
-            int filas = int.Parse(nombre.Attributes["filas"].Value);
+            int filas = int.Parse(nombre.Attributes["filas"]!.Value);
             int cols  = int.Parse(nombre.Attributes["columnas"].Value);
 
             MatrizCiudad ciudad = new MatrizCiudad(nom, filas, cols);
@@ -42,7 +42,7 @@ public class LectorConfiguracion
             sistema.AgregarOActualizarCiudad(ciudad);
         }
 
-        foreach (XmlNode r in doc.SelectNodes("//robot"))
+        foreach (XmlNode r in doc.SelectNodes("//robot")!)
         {
             XmlNode nombreNodo = r.SelectSingleNode("nombre");
             string nombre = nombreNodo.InnerText.Trim();

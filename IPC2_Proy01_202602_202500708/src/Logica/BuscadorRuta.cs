@@ -13,7 +13,7 @@ public class BuscadorRuta
         visitado = new bool[ciudad.Filas + 2, ciudad.Columnas + 2];
     }
 
-    public ListaSimple<NodoCelda> Buscar(NodoCelda entrada, NodoCelda objetivo, Robot robot)
+    public ListaSimple<NodoCelda>? Buscar(NodoCelda entrada, NodoCelda objetivo, Robot robot)
     {
         if (Explorar(entrada, objetivo, robot)) return Reconstruir();
         return null;   // ninguna ruta posible -> "Misión Imposible"

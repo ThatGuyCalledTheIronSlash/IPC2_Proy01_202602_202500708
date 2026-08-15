@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<configuracion>
+  <listaCiudades>
+    <ciudad>
+      <nombre filas="5" columnas="6">CiudadCivil</nombre>
+      <fila numero="1">"******"</fila>
+      <fila numero="2">"*E  E*"</fila>
+      <fila numero="3">"*    *"</fila>
+      <fila numero="4">"*C  C*"</fila>
+      <fila numero="5">"******"</fila>
+    </ciudad>
+    <ciudad>
+      <nombre filas="5" columnas="7">CiudadRecurso</nombre>
+      <fila numero="1">"*******"</fila>
+      <fila numero="2">"*E    *"</fila>
+      <fila numero="3">"* *** *"</fila>
+      <fila numero="4">"*     *"</fila>
+      <fila numero="5">"***R***"</fila>
+      <unidadMilitar fila="4" columna="4">15</unidadMilitar>
+    </ciudad>
+  </listaCiudades>
+  <robots>
+    <robot>
+      <nombre tipo="ChapinRescue">robotRescate1</nombre>
+    </robot>
+    <robot>
+      <nombre tipo="ChapinRescue">robotRescate2</nombre>
+    </robot>
+    <robot>
+      <nombre tipo="ChapinFighter" capacidad="30">robotFighterFuerte</nombre>
+    </robot>
+    <robot>
+      <nombre tipo="ChapinFighter" capacidad="10">robotFighterDebil</nombre>
+    </robot>
+  </robots>
+</configuracion>

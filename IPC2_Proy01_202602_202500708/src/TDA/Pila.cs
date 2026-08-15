@@ -1,6 +1,6 @@
 public class Pila<T>
 {
-    private Nodo<T> tope;
+    private Nodo<T>? tope;
     private int cantidad;
     public int Cantidad { get { return cantidad; } }
     public bool EstaVacia { get { return tope == null; } }
@@ -13,7 +13,7 @@ public class Pila<T>
         cantidad++;
     }
 
-    public T Desapilar()
+    public T? Desapilar()
     {
         if (tope == null) return default(T);
         T dato = tope.Dato;

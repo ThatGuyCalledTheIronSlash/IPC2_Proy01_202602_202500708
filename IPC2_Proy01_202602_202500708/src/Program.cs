@@ -55,7 +55,7 @@ class Program
     static void CargarArchivo()
         {
             Console.Write("Ruta del archivo XML: ");
-            string ruta = Console.ReadLine();
+            string ruta = Console.ReadLine() ??"";
 
             try
             {

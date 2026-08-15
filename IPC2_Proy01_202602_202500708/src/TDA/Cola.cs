@@ -1,6 +1,6 @@
 public class Cola<T>
 {
-    private Nodo<T> frente, final;
+    private Nodo<T>? frente, final;
     public bool EstaVacia { get { return frente == null; } }
 
     public void Encolar(T dato)
@@ -10,7 +10,7 @@ public class Cola<T>
         else { final.Siguiente = nuevo; final = nuevo; }
     }
 
-    public T Desencolar()
+    public T? Desencolar()
     {
         if (frente == null) return default(T);
         T dato = frente.Dato;

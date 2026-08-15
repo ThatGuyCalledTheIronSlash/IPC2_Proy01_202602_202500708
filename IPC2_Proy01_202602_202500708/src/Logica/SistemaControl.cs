@@ -1,15 +1,12 @@
-// Coordina ciudades, robots y misiones. Guarda todo en TDA propios
-// (ListaSimple<T>), nunca en List<T>/Queue<T>/Stack<T> de C#.
-
 public class SistemaControl
 {
     private ListaSimple<MatrizCiudad> ciudades = new ListaSimple<MatrizCiudad>();
     private ListaSimple<Robot> robots = new ListaSimple<Robot>();
 
     // Se guardan para poder generar el reporte Graphviz después (opción 5 del menú)
-    private ListaSimple<NodoCelda> ultimaRuta;
-    private string ultimoTipoMision;
-    private NodoCelda ultimoObjetivo;
+    private ListaSimple<NodoCelda>? ultimaRuta;
+    private string? ultimoTipoMision;
+    private NodoCelda? ultimoObjetivo;
 
     private ReporteRuta reporte = new ReporteRuta();
 
@@ -72,7 +69,7 @@ public class SistemaControl
 
     // ---------- Selección para planificar misión ----------
 
-    public MatrizCiudad SeleccionarCiudad(String tipoMision)
+    public MatrizCiudad? SeleccionarCiudad(String tipoMision)
     {
         ListaSimple<MatrizCiudad> candidatas = new ListaSimple<MatrizCiudad>();
             Nodo<MatrizCiudad> actual = ciudades.Primero;
@@ -113,7 +110,7 @@ public class SistemaControl
     }
 
 
-    public Robot SeleccionarRobot(string tipoMision)
+    public Robot? SeleccionarRobot(string tipoMision)
     {
         string tipoRequerido = tipoMision == "rescate" ? "ChapinRescue" : "ChapinFighter";
 
@@ -144,7 +141,7 @@ public class SistemaControl
         return idx == -1 ? null : candidatos.ObtenerEn(idx - 1);
     }
 
-    public NodoCelda SeleccionarEntrada(MatrizCiudad ciudad)
+    public NodoCelda? SeleccionarEntrada(MatrizCiudad ciudad)
     {
         if (ciudad == null) return null;
 
