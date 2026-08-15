@@ -32,21 +32,24 @@ class Program
 
     static void PlanificarMision(string tipo)
     {
-        MatrizCiudad ciudad = sistema.SeleccionarCiudad();
-        if (ciudad == null) { Console.WriteLine("No hay ciudades cargadas."); return; }
-        Robot robot = sistema.SeleccionarRobot(tipo);
-        if (robot == null) { Console.WriteLine("No hay robots disponibles para este tipo de misión."); return; }
-        NodoCelda entrada = sistema.SeleccionarEntrada(ciudad);
-        if (entrada == null) { Console.WriteLine("No hay entrada disponible para esta ciudad."); return; }
-        NodoCelda objetivo = sistema.SeleccionarObjetivo(ciudad, tipo);
-        if (objetivo == null) { Console.WriteLine("No hay objetivo disponible para esta misión."); return; }
+            MatrizCiudad ciudad = sistema.SeleccionarCiudad(tipo);
+            if (ciudad == null) return;
 
-        ListaSimple<NodoCelda> ruta =
-            new BuscadorRuta(ciudad).Buscar(entrada, objetivo, robot);
+            Robot robot = sistema.SeleccionarRobot(tipo);
+            if (robot == null) return;
 
-        if (ruta == null) { Console.WriteLine("Misión Imposible"); return; }
+            NodoCelda entrada = sistema.SeleccionarEntrada(ciudad);
+            if (entrada == null) return;
 
-        sistema.ImprimirRuta(ruta, tipo, objetivo);
+            NodoCelda objetivo = sistema.SeleccionarObjetivo(ciudad, tipo);
+            if (objetivo == null) return;
+
+            ListaSimple<NodoCelda> ruta =
+                new BuscadorRuta(ciudad).Buscar(entrada, objetivo, robot);
+
+            if (ruta == null) { Console.WriteLine("Misión Imposible"); return; }
+
+            sistema.ImprimirRuta(ruta, tipo, objetivo, robot);
     }
 
     static void CargarArchivo()

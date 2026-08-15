@@ -46,7 +46,7 @@ public class SistemaControl
         robots.Insertar(robot);
     }
 
-    // ---------- Listado (opción 2 del menú) ----------
+    // ---------- Listar cargados ----------
 
     public void Listar()
     {
@@ -72,22 +72,46 @@ public class SistemaControl
 
     // ---------- Selección para planificar misión ----------
 
-    public MatrizCiudad SeleccionarCiudad()
+    public MatrizCiudad SeleccionarCiudad(String tipoMision)
     {
-        if (ciudades.Cantidad == 0)
-        {
-            Console.WriteLine("No hay ciudades cargadas. Cargue un XML primero.");
-            return null;
-        }
-        if (ciudades.Cantidad == 1) return ciudades.ObtenerEn(0);
+        ListaSimple<MatrizCiudad> candidatas = new ListaSimple<MatrizCiudad>();
+            Nodo<MatrizCiudad> actual = ciudades.Primero;
+            while (actual != null)
+            {
+                if (TieneCeldaTipo(actual.Dato, tipoMision)) candidatas.Insertar(actual.Dato);
+                actual = actual.Siguiente;
+            }
 
-        Console.WriteLine("Seleccione una ciudad:");
-        for (int i = 0; i < ciudades.Cantidad; i++)
-            Console.WriteLine($"{i + 1}. {ciudades.ObtenerEn(i).Nombre}");
+            string etiqueta = tipoMision == "rescate" ? "unidades civiles" : "recursos";
 
-        int idx = LeerOpcion(ciudades.Cantidad);
-        return idx == -1 ? null : ciudades.ObtenerEn(idx - 1);
+            if (candidatas.Cantidad == 0)
+            {
+                Console.WriteLine($"No hay ciudades con {etiqueta} disponibles para este tipo de misión.");
+                return null;
+            }
+            if (candidatas.Cantidad == 1) return candidatas.ObtenerEn(0);
+
+            Console.WriteLine("Seleccione una ciudad:");
+            for (int i = 0; i < candidatas.Cantidad; i++)
+                Console.WriteLine($"{i + 1}. {candidatas.ObtenerEn(i).Nombre}");
+
+            int idx = LeerOpcion(candidatas.Cantidad);
+            return idx == -1 ? null : candidatas.ObtenerEn(idx - 1);
     }
+
+    private bool TieneCeldaTipo(MatrizCiudad ciudad, string tipoMision)
+    {
+        for (int f = 1; f <= ciudad.Filas; f++)
+            for (int c = 1; c <= ciudad.Columnas; c++)
+            {
+                NodoCelda celda = ciudad.Obtener(f, c);
+                if (celda == null) continue;
+                if (tipoMision == "rescate" && celda.EsCivil) return true;
+                if (tipoMision == "extraccion" && celda.EsRecurso) return true;
+            }
+        return false;
+    }
+
 
     public Robot SeleccionarRobot(string tipoMision)
     {
@@ -184,11 +208,37 @@ public class SistemaControl
         return idx == -1 ? null : candidatos.ObtenerEn(idx - 1);
     }
 
-    // ---------- Resultado de misión (opción 3/4 del menú) ----------
+    // ---------- Resultado de misión (opción 3 y 4 del menú) ----------
 
-    public void ImprimirRuta(ListaSimple<NodoCelda> ruta, string tipoMision, NodoCelda objetivo)
+    public void ImprimirRuta(ListaSimple<NodoCelda> ruta, string tipoMision, NodoCelda objetivo, Robot robot)
     {
-        Console.WriteLine("--- Ruta encontrada ---");
+    Console.WriteLine();
+        if (tipoMision == "rescate")
+        {
+            Console.WriteLine("Ruta de rescate:");
+            Console.WriteLine("Tipo de misión: rescate");
+            Console.WriteLine($"Unidad civil rescatada: {objetivo.Fila},{objetivo.Columna}");
+            Console.WriteLine($"Robot utilizado: {robot.Nombre} (ChapinRescue)");
+        }
+        else
+        {
+            Console.WriteLine("Ruta de extracción de recurso:");
+            Console.WriteLine("Tipo de misión: extracción de recursos");
+            Console.WriteLine($"Recurso extraído: {objetivo.Fila},{objetivo.Columna}");
+
+            ChapinFighter fighter = (ChapinFighter)robot;
+            int capacidadInicial = fighter.Capacidad;
+            int capacidadFinal = capacidadInicial;
+            for (int i = 0; i < ruta.Cantidad; i++)
+            {
+                NodoCelda c = ruta.ObtenerEn(i);
+                if (c.TieneMilitar) capacidadFinal -= c.CapacidadMilitar;
+            }
+            Console.WriteLine($"Robot utilizado: {robot.Nombre} (ChapinFighter – Capacidad de combate inicial {capacidadInicial}, Capacidad de combate final {capacidadFinal})");
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("Camino recorrido:");
         for (int i = 0; i < ruta.Cantidad; i++)
         {
             NodoCelda c = ruta.ObtenerEn(i);
@@ -197,12 +247,6 @@ public class SistemaControl
         }
         Console.WriteLine();
 
-        if (tipoMision == "rescate")
-            Console.WriteLine($"Unidad civil rescatada: {objetivo.Fila},{objetivo.Columna}");
-        else
-            Console.WriteLine($"Recurso extraido: {objetivo.Fila},{objetivo.Columna}");
-
-        // Se guarda para poder generar el .dot después, sin repetir la búsqueda
         ultimaRuta = ruta;
         ultimoTipoMision = tipoMision;
         ultimoObjetivo = objetivo;
