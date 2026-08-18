@@ -19,7 +19,7 @@ public class BuscadorRuta
         return null;   // ninguna ruta posible -> "Misión Imposible"
     }
 
-    private bool Explorar(NodoCelda actual, NodoCelda objetivo, Robot robot)
+    private bool Explorar(NodoCelda? actual, NodoCelda objetivo, Robot robot)
     {
         if (actual == null) return false;
         if (visitado[actual.Fila, actual.Columna]) return false;
