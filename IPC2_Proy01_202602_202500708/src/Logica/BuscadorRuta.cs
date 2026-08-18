@@ -48,10 +48,18 @@ public class BuscadorRuta
     private ListaSimple<NodoCelda> Reconstruir()
     {
         Pila<NodoCelda> invertida = new Pila<NodoCelda>();
-        while (!camino.EstaVacia) invertida.Apilar(camino.Desapilar());
+        while (!camino.EstaVacia)
+        {
+            NodoCelda? nodo = camino.Desapilar();
+            if (nodo != null) invertida.Apilar(nodo);
+        }
 
         ListaSimple<NodoCelda> ruta = new ListaSimple<NodoCelda>();
-        while (!invertida.EstaVacia) ruta.Insertar(invertida.Desapilar());
+        while (!invertida.EstaVacia)
+        {
+            NodoCelda? nodo = invertida.Desapilar();
+            if (nodo != null) ruta.Insertar(nodo);
+        }
         return ruta;
     }
 }

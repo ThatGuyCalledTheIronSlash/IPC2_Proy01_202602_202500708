@@ -15,7 +15,7 @@ public class SistemaControl
     // Si el nombre ya existe, se reemplaza el dato del nodo (no se duplica).
     public void AgregarOActualizarCiudad(MatrizCiudad ciudad)
     {
-        Nodo<MatrizCiudad> actual = ciudades.Primero;
+        Nodo<MatrizCiudad>? actual = ciudades.Primero;
         while (actual != null)
         {
             if (actual.Dato.Nombre == ciudad.Nombre)
@@ -30,7 +30,7 @@ public class SistemaControl
 
     public void AgregarOActualizarRobot(Robot robot)
     {
-        Nodo<Robot> actual = robots.Primero;
+        Nodo<Robot>? actual = robots.Primero;
         while (actual != null)
         {
             if (actual.Dato.Nombre == robot.Nombre)
@@ -49,7 +49,7 @@ public class SistemaControl
     {
         Console.WriteLine("--- Ciudades cargadas ---");
         if (ciudades.Cantidad == 0) Console.WriteLine("(ninguna)");
-        Nodo<MatrizCiudad> nc = ciudades.Primero;
+        Nodo<MatrizCiudad>? nc = ciudades.Primero;
         while (nc != null)
         {
             Console.WriteLine($"- {nc.Dato.Nombre} ({nc.Dato.Filas}x{nc.Dato.Columnas})");
@@ -58,7 +58,7 @@ public class SistemaControl
 
         Console.WriteLine("--- Robots cargados ---");
         if (robots.Cantidad == 0) Console.WriteLine("(ninguno)");
-        Nodo<Robot> nr = robots.Primero;
+        Nodo<Robot>? nr = robots.Primero;
         while (nr != null)
         {
             string extra = nr.Dato is ChapinFighter f ? $" (capacidad {f.Capacidad})" : "";
@@ -72,7 +72,7 @@ public class SistemaControl
     public MatrizCiudad? SeleccionarCiudad(String tipoMision)
     {
         ListaSimple<MatrizCiudad> candidatas = new ListaSimple<MatrizCiudad>();
-            Nodo<MatrizCiudad> actual = ciudades.Primero;
+            Nodo<MatrizCiudad>? actual = ciudades.Primero;
             while (actual != null)
             {
                 if (TieneCeldaTipo(actual.Dato, tipoMision)) candidatas.Insertar(actual.Dato);
@@ -90,7 +90,7 @@ public class SistemaControl
 
             Console.WriteLine("Seleccione una ciudad:");
             for (int i = 0; i < candidatas.Cantidad; i++)
-                Console.WriteLine($"{i + 1}. {candidatas.ObtenerEn(i).Nombre}");
+                Console.WriteLine($"{i + 1}. {candidatas.ObtenerEn(i)?.Nombre}");
 
             int idx = LeerOpcion(candidatas.Cantidad);
             return idx == -1 ? null : candidatas.ObtenerEn(idx - 1);
@@ -101,7 +101,7 @@ public class SistemaControl
         for (int f = 1; f <= ciudad.Filas; f++)
             for (int c = 1; c <= ciudad.Columnas; c++)
             {
-                NodoCelda celda = ciudad.Obtener(f, c);
+                NodoCelda? celda = ciudad.Obtener(f, c);
                 if (celda == null) continue;
                 if (tipoMision == "rescate" && celda.EsCivil) return true;
                 if (tipoMision == "extraccion" && celda.EsRecurso) return true;
@@ -115,7 +115,7 @@ public class SistemaControl
         string tipoRequerido = tipoMision == "rescate" ? "ChapinRescue" : "ChapinFighter";
 
         ListaSimple<Robot> candidatos = new ListaSimple<Robot>();
-        Nodo<Robot> actual = robots.Primero;
+        Nodo<Robot>? actual = robots.Primero;
         while (actual != null)
         {
             if (actual.Dato.Tipo == tipoRequerido) candidatos.Insertar(actual.Dato);
@@ -132,7 +132,8 @@ public class SistemaControl
         Console.WriteLine($"Seleccione un {tipoRequerido} (varios disponibles):");
         for (int i = 0; i < candidatos.Cantidad; i++)
         {
-            Robot r = candidatos.ObtenerEn(i);
+            Robot? r = candidatos.ObtenerEn(i);
+            if (r == null) continue;
             string extra = r is ChapinFighter f ? $" - capacidad {f.Capacidad}" : "";
             Console.WriteLine($"{i + 1}. {r.Nombre}{extra}");
         }
@@ -149,7 +150,7 @@ public class SistemaControl
         for (int f = 1; f <= ciudad.Filas; f++)
             for (int c = 1; c <= ciudad.Columnas; c++)
             {
-                NodoCelda celda = ciudad.Obtener(f, c);
+                NodoCelda? celda = ciudad.Obtener(f, c);
                 if (celda != null && celda.EsEntrada) entradas.Insertar(celda);
             }
 
@@ -163,15 +164,15 @@ public class SistemaControl
         Console.WriteLine("Seleccione un punto de entrada:");
         for (int i = 0; i < entradas.Cantidad; i++)
         {
-            NodoCelda e = entradas.ObtenerEn(i);
-            Console.WriteLine($"{i + 1}. Entrada en fila {e.Fila}, columna {e.Columna}");
+            NodoCelda? e = entradas.ObtenerEn(i);
+            Console.WriteLine($"{i + 1}. Entrada en fila {e?.Fila}, columna {e?.Columna}");
         }
 
         int idx = LeerOpcion(entradas.Cantidad);
         return idx == -1 ? null : entradas.ObtenerEn(idx - 1);
     }
 
-    public NodoCelda SeleccionarObjetivo(MatrizCiudad ciudad, string tipoMision)
+    public NodoCelda? SeleccionarObjetivo(MatrizCiudad ciudad, string tipoMision)
     {
         if (ciudad == null) return null;
 
@@ -179,7 +180,7 @@ public class SistemaControl
         for (int f = 1; f <= ciudad.Filas; f++)
             for (int c = 1; c <= ciudad.Columnas; c++)
             {
-                NodoCelda celda = ciudad.Obtener(f, c);
+                NodoCelda? celda = ciudad.Obtener(f, c);
                 if (celda == null) continue;
                 if (tipoMision == "rescate" && celda.EsCivil) candidatos.Insertar(celda);
                 if (tipoMision == "extraccion" && celda.EsRecurso) candidatos.Insertar(celda);
@@ -197,8 +198,8 @@ public class SistemaControl
         Console.WriteLine($"Seleccione un {etiqueta}:");
         for (int i = 0; i < candidatos.Cantidad; i++)
         {
-            NodoCelda o = candidatos.ObtenerEn(i);
-            Console.WriteLine($"{i + 1}. {o.Fila},{o.Columna}");
+            NodoCelda? o = candidatos.ObtenerEn(i);
+            Console.WriteLine($"{i + 1}. {o?.Fila},{o?.Columna}");
         }
 
         int idx = LeerOpcion(candidatos.Cantidad);
@@ -228,7 +229,8 @@ public class SistemaControl
             int capacidadFinal = capacidadInicial;
             for (int i = 0; i < ruta.Cantidad; i++)
             {
-                NodoCelda c = ruta.ObtenerEn(i);
+                NodoCelda? c = ruta.ObtenerEn(i);
+                if (c == null) continue;
                 if (c.TieneMilitar) capacidadFinal -= c.CapacidadMilitar;
             }
             Console.WriteLine($"Robot utilizado: {robot.Nombre} (ChapinFighter – Capacidad de combate inicial {capacidadInicial}, Capacidad de combate final {capacidadFinal})");
@@ -238,8 +240,8 @@ public class SistemaControl
         Console.WriteLine("Camino recorrido:");
         for (int i = 0; i < ruta.Cantidad; i++)
         {
-            NodoCelda c = ruta.ObtenerEn(i);
-            Console.Write($"({c.Fila},{c.Columna})");
+            NodoCelda? c = ruta.ObtenerEn(i);
+            Console.Write($"({c?.Fila},{c?.Columna})");
             if (i < ruta.Cantidad - 1) Console.Write(" -> ");
         }
         Console.WriteLine();
