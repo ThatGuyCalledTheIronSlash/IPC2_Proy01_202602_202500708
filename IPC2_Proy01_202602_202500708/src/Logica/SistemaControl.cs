@@ -47,22 +47,38 @@ public class SistemaControl
 
     public void Listar()
     {
-        Console.WriteLine("--- Ciudades cargadas ---");
-        if (ciudades.Cantidad == 0) Console.WriteLine("(ninguna)");
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.WriteLine();
+        Console.WriteLine("     ╔═══════════════════════════════╗");
+        Console.WriteLine("     ║        Ciudades cargadas      ║");
+        Console.WriteLine("     ╚═══════════════════════════════╝");
+        Console.ResetColor();
+        if (ciudades.Cantidad == 0) 
+        {
+            Console.WriteLine("     ║ No Hay Ciudades Cargadas      ║");
+            
+        }
         Nodo<MatrizCiudad>? nc = ciudades.Primero;
         while (nc != null)
         {
-            Console.WriteLine($"- {nc.Dato.Nombre} ({nc.Dato.Filas}x{nc.Dato.Columnas})");
+            Console.WriteLine($"     ║- {nc.Dato.Nombre} ({nc.Dato.Filas}x{nc.Dato.Columnas})");
             nc = nc.Siguiente;
         }
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.WriteLine("     ╔═══════════════════════════════╗");
+        Console.WriteLine("     ║        Robots cargados        ║");
+        Console.WriteLine("     ╚═══════════════════════════════╝");
+        Console.ResetColor();
 
-        Console.WriteLine("--- Robots cargados ---");
-        if (robots.Cantidad == 0) Console.WriteLine("(ninguno)");
+        if (robots.Cantidad == 0) 
+        {
+            Console.WriteLine("     ║ No Hay Robots Cargados        ║");
+        }
         Nodo<Robot>? nr = robots.Primero;
         while (nr != null)
         {
             string extra = nr.Dato is ChapinFighter f ? $" (capacidad {f.Capacidad})" : "";
-            Console.WriteLine($"- {nr.Dato.Nombre} ({nr.Dato.Tipo}){extra}");
+            Console.WriteLine($"     ║- {nr.Dato.Nombre} ({nr.Dato.Tipo}){extra}");
             nr = nr.Siguiente;
         }
     }
@@ -83,12 +99,16 @@ public class SistemaControl
 
             if (candidatas.Cantidad == 0)
             {
-                Console.WriteLine($"No hay ciudades con {etiqueta} disponibles para este tipo de misión.");
+                Console.WriteLine($"     No hay ciudades con {etiqueta} disponibles para este tipo de misión.");
                 return null;
             }
             if (candidatas.Cantidad == 1) return candidatas.ObtenerEn(0);
 
-            Console.WriteLine("Seleccione una ciudad:");
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.WriteLine("     ╔═══════════════════════════════╗");
+                Console.WriteLine("     ║        Seleccione ciudad      ║");
+                Console.WriteLine("     ╚═══════════════════════════════╝");
+                Console.ResetColor();
             for (int i = 0; i < candidatas.Cantidad; i++)
                 Console.WriteLine($"{i + 1}. {candidatas.ObtenerEn(i)?.Nombre}");
 
@@ -124,18 +144,22 @@ public class SistemaControl
 
         if (candidatos.Cantidad == 0)
         {
-            Console.WriteLine($"No hay robots de tipo {tipoRequerido} disponibles.");
+            Console.WriteLine($"     No hay robots de tipo {tipoRequerido} disponibles.");
             return null;
         }
         if (candidatos.Cantidad == 1) return candidatos.ObtenerEn(0);
 
-        Console.WriteLine($"Seleccione un {tipoRequerido} (varios disponibles):");
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.WriteLine("     ╔═══════════════════════════════╗");
+        Console.WriteLine($"    ║   Seleccione {tipoRequerido,-16} ║");
+        Console.WriteLine("     ╚═══════════════════════════════╝");
+        Console.ResetColor();
         for (int i = 0; i < candidatos.Cantidad; i++)
         {
             Robot? r = candidatos.ObtenerEn(i);
             if (r == null) continue;
             string extra = r is ChapinFighter f ? $" - capacidad {f.Capacidad}" : "";
-            Console.WriteLine($"{i + 1}. {r.Nombre}{extra}");
+            Console.WriteLine($"     {i + 1}. {r.Nombre}{extra}");
         }
 
         int idx = LeerOpcion(candidatos.Cantidad);
@@ -156,16 +180,20 @@ public class SistemaControl
 
         if (entradas.Cantidad == 0)
         {
-            Console.WriteLine("Esta ciudad no tiene punto de entrada.");
+            Console.WriteLine("     Esta ciudad no tiene punto de entrada.");
             return null;
         }
         if (entradas.Cantidad == 1) return entradas.ObtenerEn(0);
 
-        Console.WriteLine("Seleccione un punto de entrada:");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("     ╔═══════════════════════════════╗");
+            Console.WriteLine("     ║     Seleccione entrada        ║");
+            Console.WriteLine("     ╚═══════════════════════════════╝");
+            Console.ResetColor();
         for (int i = 0; i < entradas.Cantidad; i++)
         {
             NodoCelda? e = entradas.ObtenerEn(i);
-            Console.WriteLine($"{i + 1}. Entrada en fila {e?.Fila}, columna {e?.Columna}");
+            Console.WriteLine($"    {i + 1}. Entrada en fila {e?.Fila}, columna {e?.Columna}");
         }
 
         int idx = LeerOpcion(entradas.Cantidad);
@@ -190,16 +218,20 @@ public class SistemaControl
 
         if (candidatos.Cantidad == 0)
         {
-            Console.WriteLine($"Esta ciudad no tiene {etiqueta}s.");
+            Console.WriteLine($"    Esta ciudad no tiene {etiqueta}s.");
             return null;
         }
         if (candidatos.Cantidad == 1) return candidatos.ObtenerEn(0);
 
-        Console.WriteLine($"Seleccione un {etiqueta}:");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("     ╔═══════════════════════════════╗");
+            Console.WriteLine($"    ║   Seleccione {etiqueta,-16}   ║");
+            Console.WriteLine("     ╚═══════════════════════════════╝");
+            Console.ResetColor();
         for (int i = 0; i < candidatos.Cantidad; i++)
         {
             NodoCelda? o = candidatos.ObtenerEn(i);
-            Console.WriteLine($"{i + 1}. {o?.Fila},{o?.Columna}");
+            Console.WriteLine($"    {i + 1}. {o?.Fila},{o?.Columna}");
         }
 
         int idx = LeerOpcion(candidatos.Cantidad);
@@ -270,11 +302,11 @@ public class SistemaControl
 
     private int LeerOpcion(int max)
     {
-        Console.Write("Opción: ");
+        Console.Write("     Opción: ");
         if (int.TryParse(Console.ReadLine(), out int opcion) && opcion >= 1 && opcion <= max)
             return opcion;
 
-        Console.WriteLine("Opción inválida.");
+        Console.WriteLine("     Opción inválida.");
         return -1;
     }
 }

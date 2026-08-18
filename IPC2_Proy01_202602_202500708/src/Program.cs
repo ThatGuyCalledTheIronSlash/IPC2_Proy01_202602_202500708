@@ -42,6 +42,7 @@ class Program
 //-------------------------------------------------------------------------
     static void Pausa()
     {
+        Console.ForegroundColor = ConsoleColor.DarkBlue;
         Console.WriteLine("\nPresione cualquier tecla para continuar...");
         Console.ReadKey();
     }
@@ -61,7 +62,7 @@ class Program
                 if (objetivo == null) return;
 
             ListaSimple<NodoCelda>? ruta = new BuscadorRuta(ciudad).Buscar(entrada, objetivo, robot);
-                if (ruta == null) { Console.WriteLine("Misión Imposible"); return; }
+                if (ruta == null) { Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("Misión Imposible"); Console.ResetColor(); return; }
 
             sistema.ImprimirRuta(ruta, tipo, objetivo, robot);
     }
@@ -74,11 +75,19 @@ class Program
             try
             {
                 new LectorConfiguracion(sistema).Cargar(ruta);
-                Console.WriteLine("Archivo cargado correctamente.");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("     ╔═══════════════════════════════╗");
+                Console.WriteLine("     ║ Archivo cargado correctamente ║");
+                Console.WriteLine("     ╚═══════════════════════════════╝");
+                Console.ResetColor();
             }
-            catch (Exception ex)
+            catch (Exception)    
             {
-                Console.WriteLine($"Error al cargar el archivo: {ex.Message}");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("     ╔═══════════════════════════════╗");
+                Console.WriteLine("     ║   Error al cargar el archivo  ║");
+                Console.WriteLine("     ╚═══════════════════════════════╝");
+                Console.ResetColor();
             }
         }
 }
