@@ -11,16 +11,17 @@ public class ReporteRuta
         sb.AppendLine("  rankdir=LR;");
         sb.AppendLine("  node [shape=box style=filled fontname=\"Courier\"];");
 
-        Nodo<NodoCelda> actual = ruta.Primero;
+        Nodo<NodoCelda>? actual = ruta.Primero;
         int i = 0;
         while (actual != null)
         {
-            NodoCelda c = actual.Dato;
+            NodoCelda? c = actual.Dato;
             string id = "n" + i;
-            string color = c.EsEntrada ? "\"#C6FF3D\""
-                         : c.TieneMilitar ? "\"#FF6FD8\""
-                         : c.EsCivil || c.EsRecurso ? "\"#7C3AED\""
-                         : "white";
+            string color;
+            if (c.EsEntrada) color = "\"#C6FF3D\"";
+                else if (c.TieneMilitar) color = "\"#FF6FD8\"";
+                    else if (c.EsCivil || c.EsRecurso) color = "\"#7C3AED\"";
+                        else color = "white";
 
             sb.AppendLine("  " + id + " [label=\"" + c.Fila + "," + c.Columna +
                           "\" fillcolor=" + color + "];");
