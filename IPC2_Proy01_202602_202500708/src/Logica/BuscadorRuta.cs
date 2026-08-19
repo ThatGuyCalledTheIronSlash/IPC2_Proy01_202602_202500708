@@ -1,5 +1,4 @@
 // Búsqueda de una ruta válida: backtracking sobre la matriz enlazada.
-// Basta con encontrar UNA ruta que cumpla la misión.
 
 public class BuscadorRuta
 {
@@ -35,15 +34,42 @@ public class BuscadorRuta
 
         if (esObjetivo) return true;
 
-        if (Explorar(actual.Arriba, objetivo, estado)) return true;
-        if (Explorar(actual.Derecha, objetivo, estado)) return true;
-        if (Explorar(actual.Abajo, objetivo, estado)) return true;
-        if (Explorar(actual.Izquierda, objetivo, estado)) return true;
+        foreach (NodoCelda? vecino in VecinosHaciaObjetivo(actual, objetivo))
+        {
+            if (Explorar(vecino, objetivo, estado)) return true;
+        }
 
         camino.Desapilar();                                  // retrocede
         visitado[actual.Fila, actual.Columna] = false;
         return false;
     }
+
+
+//Ordena los 4 vecinos más cercanos al objetivo.
+private NodoCelda?[] VecinosHaciaObjetivo(NodoCelda actual, NodoCelda objetivo)
+{
+    NodoCelda?[] vecinos = { actual.Arriba, actual.Abajo, actual.Izquierda, actual.Derecha };
+    int[] distancias = new int[4];
+
+    for (int i = 0; i < 4; i++)
+        distancias[i] = vecinos[i] == null ? int.MaxValue : Distancia(vecinos[i]!, objetivo);
+
+    // Ordenamiento burbuja
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 3 - i; j++)
+            if (distancias[j] > distancias[j + 1])
+            {
+                (distancias[j], distancias[j + 1]) = (distancias[j + 1], distancias[j]);
+                (vecinos[j], vecinos[j + 1]) = (vecinos[j + 1], vecinos[j]);
+            }
+
+    return vecinos;
+}
+
+private int Distancia(NodoCelda a, NodoCelda objetivo)
+{
+    return Math.Abs(a.Fila - objetivo.Fila) + Math.Abs(a.Columna - objetivo.Columna);
+}
 
     private ListaSimple<NodoCelda> Reconstruir()
     {
