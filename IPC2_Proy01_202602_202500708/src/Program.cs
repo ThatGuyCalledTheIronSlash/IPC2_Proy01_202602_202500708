@@ -16,7 +16,8 @@ class Program
                 case "3": PlanificarMision("rescate"); Pausa(); break;
                 case "4": PlanificarMision("extraccion"); Pausa(); break;
                 case "5": sistema.GenerarReporte(); Pausa(); break;
-                case "6": salir = true; break;
+                case "6": VerMapa(); Pausa(); break;
+                case "7": salir = true; break;
                 default: Console.WriteLine("Opción inválida."); Pausa(); break;
             }
         }
@@ -35,7 +36,8 @@ class Program
         Console.WriteLine("     ║3. Planificar misión de rescate              ║");
         Console.WriteLine("     ║4. Planificar misión de extracción de recurso║");
         Console.WriteLine("     ║5. Generar reporte Graphviz de la última ruta║");
-        Console.WriteLine("     ║6. Salir                                     ║");
+        Console.WriteLine("     ║6. Ver Mapa de una Ciudad                    ║");
+        Console.WriteLine("     ║7. Salir                                     ║");
         Console.WriteLine("     ╚═════════════════════════════════════════════╝");
         Console.Write("\nOpción: ");
     }
@@ -52,6 +54,8 @@ class Program
             MatrizCiudad? ciudad = sistema.SeleccionarCiudad(tipo);
                 if (ciudad == null) return;
 
+            sistema.ImprimirMatriz(ciudad); //Muestra mapa de la ciudad seleccionada.
+
             Robot? robot = sistema.SeleccionarRobot(tipo);
                 if (robot == null) return;
 
@@ -64,7 +68,15 @@ class Program
             ListaSimple<NodoCelda>? ruta = new BuscadorRuta(ciudad).Buscar(entrada, objetivo, robot);
                 if (ruta == null) { Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("Misión Imposible"); Console.ResetColor(); return; }
 
-            sistema.ImprimirRuta(ruta, tipo, objetivo, robot);
+            sistema.ImprimirRuta(ruta, tipo, objetivo, robot, ciudad);
+    }
+//-------------------------------------------------------------------------------
+    static void VerMapa()
+    {
+        MatrizCiudad? ciudad = sistema.SeleccionarCiudadCualquiera();
+        if (ciudad == null) return;
+
+        sistema.ImprimirMatriz(ciudad);
     }
 //--------------------------------Cargar Archivo--------------------------------
     static void CargarArchivo()

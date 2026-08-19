@@ -115,6 +115,28 @@ public class SistemaControl
             int idx = LeerOpcion(candidatas.Cantidad);
             return idx == -1 ? null : candidatas.ObtenerEn(idx - 1);
     }
+//----------------------------------------------------
+    public MatrizCiudad? SeleccionarCiudadCualquiera()
+    {
+        if (ciudades.Cantidad == 0)
+        {
+            Console.WriteLine("     No hay ciudades cargadas. Cargue un XML primero.");
+            return null;
+        }
+        if (ciudades.Cantidad == 1) return ciudades.ObtenerEn(0);
+
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.WriteLine("     ╔═══════════════════════════════╗");
+        Console.WriteLine("     ║        Seleccione ciudad       ║");
+        Console.WriteLine("     ╚═══════════════════════════════╝");
+        Console.ResetColor();
+
+        for (int i = 0; i < ciudades.Cantidad; i++)
+            Console.WriteLine($"     {i + 1}. {ciudades.ObtenerEn(i).Nombre}");
+
+        int idx = LeerOpcion(ciudades.Cantidad);
+        return idx == -1 ? null : ciudades.ObtenerEn(idx - 1);
+    }
 
     private bool TieneCeldaTipo(MatrizCiudad ciudad, string tipoMision)
     {
@@ -240,7 +262,7 @@ public class SistemaControl
 
     // ---------- Resultado de misión (opción 3 y 4 del menú) ----------
 
-    public void ImprimirRuta(ListaSimple<NodoCelda> ruta, string tipoMision, NodoCelda objetivo, Robot robot)
+    public void ImprimirRuta(ListaSimple<NodoCelda> ruta, string tipoMision, NodoCelda objetivo, Robot robot, MatrizCiudad ciudad)
     {
     Console.WriteLine();
         if (tipoMision == "rescate")
@@ -277,6 +299,8 @@ public class SistemaControl
             if (i < ruta.Cantidad - 1) Console.Write(" -> ");
         }
         Console.WriteLine();
+        ImprimirMatriz(ciudad, ruta);
+        Console.WriteLine();
 
         ultimaRuta = ruta;
         ultimoTipoMision = tipoMision;
@@ -309,4 +333,98 @@ public class SistemaControl
         Console.WriteLine("     Opción inválida.");
         return -1;
     }
+
+    //----------Imprimir Matriz ---------------
+    public void ImprimirMatriz(MatrizCiudad ciudad, ListaSimple<NodoCelda>? ruta = null)
+    {
+        Console.WriteLine($"     Mapa de {ciudad.Nombre}:");
+        Console.WriteLine();
+
+        int anchoEtiqueta = ciudad.Columnas.ToString().Length;
+        string relleno = new string(' ', anchoEtiqueta);
+            Console.Write("     " + relleno + " ");
+                for (int c = 1; c <= ciudad.Columnas; c++)
+                    Console.Write(LetraColumna(c).PadRight(2));
+                    Console.WriteLine();
+
+        string borde = new string('═', ciudad.Columnas * 2);
+            Console.WriteLine("     " + relleno + "╔" + borde + "╗");
+
+        for (int f = 1; f <= ciudad.Filas; f++)
+        {
+            Console.Write("     " + f.ToString().PadLeft(anchoEtiqueta) + "║");
+                for (int c = 1; c <= ciudad.Columnas; c++)
+                    {
+                    NodoCelda? celda = ciudad.Obtener(f, c);
+                    bool enRuta = EstaEnRuta(f, c, ruta);
+                    EscribirCelda(celda, enRuta);
+                    }
+            Console.WriteLine("║");
+            }
+        Console.WriteLine("     " + relleno + "╚" + borde + "╝");
+        Console.WriteLine();
+    }
+//----------------------------------------------------
+private String LetraColumna(int columna)
+    {
+        int indice = (columna -1) % 26;
+        return ((char)('A' + indice)).ToString();
+    }
+//----------------------------------------------------
+private void EscribirCelda(NodoCelda? celda, bool enRuta)
+    {
+        if (enRuta)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("██");
+            Console.ResetColor();
+            return;
+        }
+
+        if (celda == null) { Console.Write("  "); return; }
+
+        if (celda.EsIntransitable)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.Write("██");
+        }
+        else if (celda.TieneMilitar)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("M ");
+        }
+        else if (celda.EsEntrada)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("E ");
+        }
+        else if (celda.EsCivil)
+        {
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write("C ");
+        }
+        else if (celda.EsRecurso)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("R ");
+        }
+        else
+        {
+            Console.Write("  ");
+        }
+        Console.ResetColor();
+    }
+
+
+    private bool EstaEnRuta(int fila, int columna, ListaSimple<NodoCelda>? ruta)
+    {
+        if (ruta == null) return false;
+        for (int i = 0; i < ruta.Cantidad; i++)
+        {
+            NodoCelda? c = ruta.ObtenerEn(i);
+            if (c?.Fila == fila && c?.Columna == columna) return true;
+        }
+        return false;
+    }
+//----------------------------------------
 }
